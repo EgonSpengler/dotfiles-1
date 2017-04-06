@@ -16,14 +16,15 @@
 # ░▓▓▓▓▓▓▓▓▓▓
 # ░░░░░░░░░░
 #
-#█▓▒░ requires: imagemagick + hsetroot
+#█▓▒░ requires: ImageMagick + feh
 
 usage() {
 	echo "usage: `basename $0` [-bfsr]
     -b background color (#222222)
     -f foreground color (#3e3e3e)
     -s step (2)
-    -r resolution (24)"
+    -r resolution (24)
+    -d desktop size (1920x1080)"
 	exit 1
 }
 
@@ -32,6 +33,7 @@ res=24
 step=4
 bg="#222222"
 fg="#3e3e3e"
+dtop="1920x1080"
 
 # evaluate
 while [ $# -gt 0 ]
@@ -51,6 +53,10 @@ do
 			;;
 			-r)
 				res="$2"
+				shift
+			;;
+			-d)
+				dtop="$2"
 				shift
 			;;
 			--)
@@ -79,4 +85,5 @@ do :; done
 
 # generate
 convert -size ${res}x${res} xc:${bg} -stroke ${fg} -draw "${lines}" /tmp/wall.png
-hsetroot -tile /tmp/wall.png
+convert -size ${dtop} tile:/tmp/wall.png /tmp/wall_tiled.png
+feh --bg-max /tmp/wall_tiled.png
